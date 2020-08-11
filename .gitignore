@@ -1,0 +1,29 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# frontend ignore files
+# dependencies
+/instagram_clone_frontend/node_modules
+/instagram_clone_frontend/.pnp
+/instagram_clone_frontend/.pnp.js
+
+# testing
+/instagram_clone_frontend/coverage
+
+# production
+/instagram_clone_frontend/build
+
+# misc
+/instagram_clone_frontend/.DS_Store
+/instagram_clone_frontend/.env.local
+/instagram_clone_frontend/.env.development.local
+/instagram_clone_frontend/.env.test.local
+/instagram_clone_frontend/.env.production.local
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+
+# backend ignore files
+# dependencies
+/instagram_clone_backend/node_modules
