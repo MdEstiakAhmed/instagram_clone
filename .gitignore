@@ -27,3 +27,6 @@ yarn-error.log*
 # backend ignore files
 # dependencies
 /instagram_clone_backend/node_modules
+
+# misc
+/instagram_clone_backend/.env
