@@ -7,6 +7,8 @@ require('dotenv').config();
 app.use(bodyParser.json());
 
 app.use('/', require('./controllers/auth'));
+app.use('/post', require('./controllers/post'));
+app.use('/user', require('./controllers/user'));
 
 // server setup start
 app.listen(process.env.PORT || 5000, function(){

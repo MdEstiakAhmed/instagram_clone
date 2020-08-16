@@ -35,5 +35,24 @@ module.exports = {
         .catch(error => {
             callback(false);
         })
+    },
+    getDataWithPopulate: (model, data, callback) => {
+        model.find(data.find)
+        .populate(data.populateColumn, data.displayColumn)
+        .then((results) => {
+            callback(results)
+        })
+        .catch((error) => {
+            callback(error);
+        })
+    },
+    getDataWithoutPopulate: (model, data, callback) => {
+        model.find(data.find, data.makeFalse)
+        .then((results) => {
+            callback(results)
+        })
+        .catch((error) => {
+            callback(error);
+        })
     }
 }

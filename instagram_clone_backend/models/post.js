@@ -1,23 +1,24 @@
 const mongoose = require('mongoose');
 const database = require('./database');
+const {ObjectId} = mongoose.Schema.Types;
 
-const userSchema = new mongoose.Schema({
-    name: {
+const postSchema = new mongoose.Schema({
+    photo: {
         type: String,
         required: true
     },
-    email: {
+    body: {
         type: String,
-        required: true
+        required: false
     },
-    password: {
-        type: String,
-        required: true
+    postCreator: {
+        type: ObjectId,
+        ref: "user"
     }
 });
 
 module.exports = {
-    storeUser: (data, callback) => {
+    storePost: (data, callback) => {
         database.insert(data, (result) => {
             callback(result);
         })
@@ -30,11 +31,11 @@ module.exports = {
             callback(result);
         })
     },
-    getUser: (model, data, callback) => {
-        database.getDataWithoutPopulate(model, data, (result) => {
+    getAllPost: (model, data, callback) => {
+        database.getDataWithPopulate(model, data, (result) => {
             callback(result);
         })
     }
 }
 
-mongoose.model('user', userSchema, 'user');
+mongoose.model('post', postSchema, 'post');

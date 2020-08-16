@@ -11,7 +11,7 @@ require('dotenv').config();
 
 router.get('/protected', loginRequire, (request, response) => {
     response.send("hello");
-})
+});
 
 router.post('/signup', (request, response) => {
     const { name, email, password } = request.body;
