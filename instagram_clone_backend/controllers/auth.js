@@ -57,8 +57,7 @@ router.post('/login', (request, response) => {
                 .then(status => {
                     if(status){
                         const token = jwt.sign({email: result.email}, process.env.AUTH_TOKEN);
-                        return response.json({token})
-                        // return response.json({'status': true, 'message': 'successfully login'});
+                        return response.json({'status': true, 'token': token, 'user': result, 'message': 'successfully login'});
                     }
                     else{
                         return response.json({'status': false, 'message': 'password does not match'});

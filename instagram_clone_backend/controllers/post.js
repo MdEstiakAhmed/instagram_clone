@@ -35,7 +35,7 @@ router.get('/getAllPost', loginRequire, (request, response) => {
     }
     getAllPost(post, data, (results) => {
         if(results){
-            return response.json(results);
+            return response.json({'status': true, 'data': results});
         }
         else{
             return response.status(422).json({'status': false, 'message': 'can not read post data'});
@@ -53,7 +53,7 @@ router.get('/getMyPost', loginRequire, (request, response) => {
     }
     getAllPost(post, data, (results) => {
         if(results){
-            return response.json(results);
+            return response.json({'status': true, 'data': results});
         }
         else{
             return response.status(422).json({'status': false, 'message': 'can not read post data'});

@@ -1,0 +1,13 @@
+.card-footer{
+    background-color: white !important;
+}
+
+.card-header{
+    background-color: white !important;
+}
+
+.home_post{
+    max-width: 100%;
+    width: 100%;
+    margin: 0 auto;
+}
