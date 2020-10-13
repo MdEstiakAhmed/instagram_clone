@@ -24,8 +24,7 @@ const Routing = () => {
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem('user'));
     if(user){
-      dispatch({type: "USER", payload: user})
-      history.push('/');
+      dispatch({type: "USER", payload: user});
     }
     else{
       history.push('/login');
@@ -53,7 +52,7 @@ const Routing = () => {
 }
 
 function App() {
-  const [state, dispatch] = useReducer(initialState, reducer);
+  const [state, dispatch] = useReducer(reducer,initialState);
   return (
     <div className="App">
       <UserContext.Provider value={{state, dispatch}}>

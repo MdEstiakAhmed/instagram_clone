@@ -11,6 +11,15 @@ const postSchema = new mongoose.Schema({
         type: String,
         required: false
     },
+    likes: [{
+        type: ObjectId,
+        ref: "user"
+    }],
+    comments: [{
+        text: String,
+        commentUserId: String,
+        commentUserName: String 
+    }],
     postCreator: {
         type: ObjectId,
         ref: "user"
@@ -35,6 +44,11 @@ module.exports = {
         database.getDataWithPopulate(model, data, (result) => {
             callback(result);
         })
+    },
+    findAndUpdate: (model, data, callback) => {
+        database.getIdAndUpdate(model, data, (result) => {
+            callback(result);
+        });
     }
 }
 

@@ -3,7 +3,8 @@ const mongoose = require('mongoose');
 const getConnection = () => {
     mongoose.connect(process.env.DB_PATH, {
         useNewUrlParser: true,
-        useUnifiedTopology: true
+        useUnifiedTopology: true,
+        useFindAndModify: false
     })
 
     mongoose.connection.on('connected', (message) => {
@@ -53,6 +54,24 @@ module.exports = {
         })
         .catch((error) => {
             callback(error);
+        })
+    },
+    getIdAndUpdate: (model, data, callback) => {
+        model.findByIdAndUpdate(data.postId, 
+            data.action === "like" ? {$push: { likes: data.userIdWhoLiked } } :
+            data.action === "dislike" ? {$pull: { likes: data.userIdWhoLiked } } : 
+            data.action === "comment" ? {$push: { comments: data.comment } } :
+            null,
+        {
+            new:true
+        })
+        .exec((error, result) => {
+            if(error){
+                callback(error);
+            }
+            else{
+                callback(result);
+            }
         })
     }
 }

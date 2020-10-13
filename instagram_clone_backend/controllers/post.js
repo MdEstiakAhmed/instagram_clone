@@ -1,7 +1,7 @@
 const express = require('express');
 const mongoose  = require('mongoose');
 const loginRequire = require('../middleware/loginRequire');
-const { findUser, storePost, getAllPost } = require('../models/post');
+const { findUser, storePost, getAllPost, findAndUpdate } = require('../models/post');
 const { request, response } = require('express');
 const router = express.Router();
 const post = mongoose.model('post');
@@ -41,7 +41,7 @@ router.get('/getAllPost', loginRequire, (request, response) => {
             return response.status(422).json({'status': false, 'message': 'can not read post data'});
         }
     })
-})
+});
 
 router.get('/getMyPost', loginRequire, (request, response) => {
     data = {
@@ -59,6 +59,58 @@ router.get('/getMyPost', loginRequire, (request, response) => {
             return response.status(422).json({'status': false, 'message': 'can not read post data'});
         }
     })
+});
+
+router.put('/like', loginRequire, (request, response) => {
+    data = {
+        postId: request.body.postId,
+        userIdWhoLiked: request.user._id,
+        action: "like"
+    }
+    findAndUpdate(post, data, (result) => {
+        if(result){
+            return response.json({'status': true, 'data': result});
+        }
+        else{
+            return response.status(422).json({'status': false, 'message': 'update error'});
+        }
+    });
+});
+
+router.put('/dislike', loginRequire, (request, response) => {
+    data = {
+        postId: request.body.postId,
+        userIdWhoLiked: request.user._id,
+        action: "dislike"
+    }
+    findAndUpdate(post, data, (result) => {
+        if(result){
+            return response.json({'status': true, 'data': result});
+        }
+        else{
+            return response.status(422).json({'status': false, 'message': 'update error'});
+        }
+    });
+});
+
+router.put('/comment', loginRequire, (request, response) => {
+    data = {
+        comment: {
+            text: request.body.text,
+            commentUserId: request.user._id,
+            commentUserName: request.user.name,
+        },
+        postId: request.body.postId,
+        action: "comment"
+    }
+    findAndUpdate(post, data, (result) => {
+        if(result){
+            return response.json({'status': true, 'data': result});
+        }
+        else{
+            return response.status(422).json({'status': false, 'message': 'update error'});
+        }
+    });
 });
 
 module.exports = router;

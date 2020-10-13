@@ -1,9 +1,12 @@
-import React, { useState, useEffect} from 'react';
-import { FaRegHeart, FaLocationArrow } from "react-icons/fa";
+import React, { useState, useEffect, useContext} from 'react';
+import { FaRegHeart, FaHeart, FaLocationArrow, FaThumbsUp, FaThumbsDown } from "react-icons/fa";
 import './Home.css';
+import { UserContext }  from '../../App';
 
 const Home = () => {
     const [data, setData] = useState([]);
+    const {state, dispatch} = useContext(UserContext);
+
     useEffect(() => {
         fetch('http://localhost:5000/post/getAllPost', {
             method: 'GET',
@@ -17,6 +20,7 @@ const Home = () => {
         .then(data => {
             if(data.status){
                 setData(data.data);
+                console.log(data.data);
             }
             else{
                 setData([]);
@@ -26,6 +30,43 @@ const Home = () => {
             console.log(error);
         })
     }, [])
+
+    const postAction = (action, id, comment) => {
+        fetch(action === "like" ? 'http://localhost:5000/post/like' :
+            action === "dislike" ? 'http://localhost:5000/post/dislike' :
+            action === "comment" ? 'http://localhost:5000/post/comment' :
+            null, {
+            method: 'PUT',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': "Bearer " + JSON.parse(localStorage.getItem('jwt'))
+            },
+            
+            body: JSON.stringify({postId: id, text: comment}),
+        })
+        .then(res => res.json())
+        .then(result => {
+            console.log(result);
+            if(result.status){
+                const newData = data.map(item=>{
+                    if(item._id==result.data["_id"]){
+                        return result.data;
+                    }else{
+                        return item;
+                    }
+                })
+                setData(newData);
+                document.getElementById(id).value = "";
+                
+            }
+        })
+        .catch(error => {
+            console.log(error);
+        })
+    }
+
+
     return (
         <div>
             <div className="container">
@@ -39,21 +80,39 @@ const Home = () => {
                                         <div className="card-header"><b>{item['postCreator']['name']}</b></div>
                                         <img className="card-img-top" src={item.photo} alt="Card image cap" />
                                         <div className="card-body">
-                                            <button className="icon_btn">
-                                                <FaRegHeart className="icon" />
+                                            {
+                                                item.likes.includes(state._id) ?
+                                                <FaHeart className="icon heart" /> :
+                                                <FaRegHeart className="icon" /> 
+                                            }
+                                            <br/>
+                                            {
+                                               item.likes.includes(state._id) ? 
+                                               <button className="icon_btn"  onClick={() => postAction("dislike", item._id)}>
+                                                    <FaThumbsDown className="icon" />
+                                                </button> :
+                                                <button className="icon_btn"  onClick={() => postAction("like", item._id)}>
+                                                <FaThumbsUp className="icon" />
                                             </button>
-                                            <h6 className="card-title">245 likes</h6>
+                                            }
+                                            <h6 className="card-title">{item.likes.length} likes</h6>
                                             <div>
-                                            <b className="card-title">{item.body} </b><p className="card-text d-inline"></p>
+                                            <b className="card-title">{item.body} </b><p className="card-text d-inline"></p><br/><hr/>
+                                            <b>comments</b>
+                                            {
+                                                item.comments.map((comment, index) => (
+                                                    <p key={index}><b>{comment.commentUserName} </b>{comment.text}</p>
+                                                ))
+                                            }
                                             </div>
                                         </div>
                                         <div className="card-footer">
                                             <div className="row">
                                                 <div className="col-10">
-                                                    <input type="text" className="input_field" placeholder="Add a comment" />
+                                                    <input type="text" id={item._id} className="input_field" placeholder="Add a comment" />
                                                 </div>
                                                 <div className="col-2 text-right">
-                                                    <button className="icon_btn">
+                                                    <button className="icon_btn" onClick={() => postAction("comment", item._id, document.getElementById(item._id).value)}>
                                                         <FaLocationArrow className="icon m-0" />
                                                     </button>
                                                 </div>

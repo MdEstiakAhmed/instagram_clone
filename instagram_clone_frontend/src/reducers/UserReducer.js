@@ -7,7 +7,5 @@ export const reducer = (state, action) => {
     else if(action.type === "CLEAR"){
         return null;
     }
-    else{
-        return state;
-    }
+    return state;
 }

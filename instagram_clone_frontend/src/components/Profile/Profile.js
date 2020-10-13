@@ -1,8 +1,11 @@
-import React, { useState, useEffect} from 'react';
+import React, { useState, useEffect, useContext} from 'react';
 import './Profile.css';
+import { UserContext }  from '../../App';
 
 const Profile = () => {
     const [userPost, setUserPost] = useState([]);
+    const {state, dispatch} = useContext(UserContext);
+
     useEffect(() => {
         fetch('http://localhost:5000/post/getMyPost', {
             method: 'GET',
@@ -14,8 +17,6 @@ const Profile = () => {
         })
         .then(res => res.json())
         .then(data => {
-            console.log(data);
-            console.log(JSON.parse(localStorage.getItem('user'))['name']);
             if(data.status){
                 setUserPost(data.data);
             }
@@ -35,7 +36,7 @@ const Profile = () => {
                         <img src="https://www.kindpng.com/picc/m/495-4952535_create-digital-profile-icon-blue-user-profile-icon.png" className="img-thumbnail rounded-circle w-50" alt="Responsive image"/>
                     </div>
                     <div className="col-4 align-self-center">
-                        <h3>{JSON.parse(localStorage.getItem('user'))['name']}</h3>
+                        <h3>{state ? state.name : "loading..."}</h3>
                         <div className="row">
                             {userPost ? <div className="col-4"><b>{userPost.length}</b> posts</div> : <div className="col-4"><b>0</b> posts</div>}
                             <div className="col-4"><b>33</b> follower</div>
