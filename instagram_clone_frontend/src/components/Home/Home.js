@@ -2,13 +2,14 @@ import React, { useState, useEffect, useContext} from 'react';
 import { FaRegHeart, FaHeart, FaLocationArrow, FaThumbsUp, FaThumbsDown } from "react-icons/fa";
 import './Home.css';
 import { UserContext }  from '../../App';
+import { Link, useHistory } from 'react-router-dom';
 
 const Home = () => {
     const [data, setData] = useState([]);
     const {state, dispatch} = useContext(UserContext);
 
     useEffect(() => {
-        fetch('http://localhost:5000/post/getAllPost', {
+        fetch('http://localhost:5000/post/getMyFollowingPost', {
             method: 'GET',
             headers: {
                 Accept: 'application/json',
@@ -20,7 +21,6 @@ const Home = () => {
         .then(data => {
             if(data.status){
                 setData(data.data);
-                console.log(data.data);
             }
             else{
                 setData([]);
@@ -35,6 +35,7 @@ const Home = () => {
         fetch(action === "like" ? 'http://localhost:5000/post/like' :
             action === "dislike" ? 'http://localhost:5000/post/dislike' :
             action === "comment" ? 'http://localhost:5000/post/comment' :
+            action === "deletePost" ? 'http://localhost:5000/post/deletePost' :
             null, {
             method: 'PUT',
             headers: {
@@ -42,23 +43,28 @@ const Home = () => {
                 'Content-Type': 'application/json',
                 'Authorization': "Bearer " + JSON.parse(localStorage.getItem('jwt'))
             },
-            
             body: JSON.stringify({postId: id, text: comment}),
         })
         .then(res => res.json())
         .then(result => {
-            console.log(result);
             if(result.status){
-                const newData = data.map(item=>{
-                    if(item._id==result.data["_id"]){
-                        return result.data;
-                    }else{
-                        return item;
-                    }
-                })
-                setData(newData);
+                if(action === "deletePost"){
+                    const newData = data.filter(item=>{
+                        return item._id !== result.data._id
+                    })
+                    setData(newData);
+                }
+                else{
+                    const newData = data.map(item=>{
+                        if(item._id==result.data["_id"]){
+                            return result.data;
+                        }else{
+                            return item;
+                        }
+                    })
+                    setData(newData);
+                }
                 document.getElementById(id).value = "";
-                
             }
         })
         .catch(error => {
@@ -77,7 +83,26 @@ const Home = () => {
                             data.map(item => {
                                 return(
                                     <div className="card  mt-4 mb-4 home_post" key={item._id}>
-                                        <div className="card-header"><b>{item['postCreator']['name']}</b></div>
+                                        <div className="card-header">
+                                            <div className="row justify-content-between">
+                                                <div className="col-4">
+                                                <Link to={state._id == item['postCreator']['_id'] ? `/profile` : `/profile/${item['postCreator']['_id']}`} className="nav-item nav-link text-dark"><b>{item['postCreator']['name']}</b></Link>
+                                                    
+                                                </div>
+                                                {
+                                                    item['postCreator']['_id'] === state._id ?
+                                                    <div className="col-4 text-right">
+                                                        <div className="btn-group">
+                                                            <button className="btn btn-light dropdown-toggle dropdown_menu" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+                                                            <div className="dropdown-menu">
+                                                                <button className="btn btn-sm" onClick={() => postAction("deletePost", item._id)}>delete</button>
+                                                            </div>
+                                                        </div>
+                                                    </div> :
+                                                    null
+                                                }
+                                            </div>
+                                        </div>
                                         <img className="card-img-top" src={item.photo} alt="Card image cap" />
                                         <div className="card-body">
                                             {

@@ -23,3 +23,7 @@
 .heart{
     color: red;
 }
+
+.link:hover{
+    text-decoration: none;
+}

@@ -29,6 +29,7 @@ const Login = () => {
             if(data.status){
                 setError();
                 localStorage.setItem('jwt', JSON.stringify(data.token));
+                delete data.user.password;
                 localStorage.setItem('user', JSON.stringify(data.user));
                 dispatch({type: "USER", payload: data.user});
                 history.push('/');

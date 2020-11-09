@@ -49,6 +49,11 @@ module.exports = {
         database.getIdAndUpdate(model, data, (result) => {
             callback(result);
         });
+    },
+    findAndDelete: (model, data, callback) => {
+        database.getIdAndRemove(model, data, (result) => {
+            callback(result);
+        })
     }
 }
 

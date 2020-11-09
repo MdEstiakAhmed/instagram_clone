@@ -1,7 +1,7 @@
 const express = require('express');
 const mongoose  = require('mongoose');
 const loginRequire = require('../middleware/loginRequire');
-const { findUser, storePost, getAllPost, findAndUpdate } = require('../models/post');
+const { findUser, storePost, getAllPost, findAndUpdate, findAndDelete } = require('../models/post');
 const { request, response } = require('express');
 const router = express.Router();
 const post = mongoose.model('post');
@@ -43,13 +43,49 @@ router.get('/getAllPost', loginRequire, (request, response) => {
     })
 });
 
+router.get('/getMyFollowingPost', loginRequire, (request, response) => {
+    data = {
+        find: {
+            postCreator: request.user.followings
+        },
+        populateColumn: 'postCreator',
+        displayColumn: '_id name  followings followers'
+    }
+    getAllPost(post, data, (results) => {
+        if(results){
+            return response.json({'status': true, 'data': results});
+        }
+        else{
+            return response.status(422).json({'status': false, 'message': 'can not read post data'});
+        }
+    })
+});
+
 router.get('/getMyPost', loginRequire, (request, response) => {
     data = {
         find: {
             postCreator: request.user
         },
         populateColumn: 'postCreator',
-        displayColumn: '_id name'
+        displayColumn: '_id name  followings followers'
+    }
+    getAllPost(post, data, (results) => {
+        if(results){
+            return response.json({'status': true, 'data': results});
+        }
+        else{
+            return response.status(422).json({'status': false, 'message': 'can not read post data'});
+        }
+    })
+});
+
+router.get('/getUserPost/:id', loginRequire, (request, response) => {
+    data = {
+        find: {
+            postCreator: request.params.id
+        },
+        populateColumn: 'postCreator',
+        displayColumn: '_id name followings followers'
     }
     getAllPost(post, data, (results) => {
         if(results){
@@ -63,7 +99,7 @@ router.get('/getMyPost', loginRequire, (request, response) => {
 
 router.put('/like', loginRequire, (request, response) => {
     data = {
-        postId: request.body.postId,
+        searchId: request.body.postId,
         userIdWhoLiked: request.user._id,
         action: "like"
     }
@@ -79,7 +115,7 @@ router.put('/like', loginRequire, (request, response) => {
 
 router.put('/dislike', loginRequire, (request, response) => {
     data = {
-        postId: request.body.postId,
+        searchId: request.body.postId,
         userIdWhoLiked: request.user._id,
         action: "dislike"
     }
@@ -100,7 +136,7 @@ router.put('/comment', loginRequire, (request, response) => {
             commentUserId: request.user._id,
             commentUserName: request.user.name,
         },
-        postId: request.body.postId,
+        searchId: request.body.postId,
         action: "comment"
     }
     findAndUpdate(post, data, (result) => {
@@ -109,6 +145,20 @@ router.put('/comment', loginRequire, (request, response) => {
         }
         else{
             return response.status(422).json({'status': false, 'message': 'update error'});
+        }
+    });
+});
+
+router.put('/deletePost', loginRequire, (request, response) => {
+    data = {
+        searchId: request.body.postId,
+    }
+    findAndDelete(post, data, (result) => {
+        if(result){
+            return response.json({'status': true, 'data': result});
+        }
+        else{
+            return response.status(422).json({'status': false, 'message': 'delete error'});
         }
     });
 });

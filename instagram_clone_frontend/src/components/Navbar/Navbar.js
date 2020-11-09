@@ -19,6 +19,7 @@ const Navbar = () => {
             return ([
                 <Link to="/create" className="nav-item nav-link">create post</Link>,
                 <Link to="/profile" className="nav-item nav-link">{state.name}</Link>,
+                <Link to="/suggestion" className="nav-item nav-link">suggestion</Link>,
                 <button className="btn btn-danger" onClick={logoutProcess}>logout</button>
             ]);
         }

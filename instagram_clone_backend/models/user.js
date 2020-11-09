@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const {ObjectId} = mongoose.Schema.Types;
 const database = require('./database');
 
 const userSchema = new mongoose.Schema({
@@ -13,7 +14,19 @@ const userSchema = new mongoose.Schema({
     password: {
         type: String,
         required: true
-    }
+    },
+    followers: [
+        {
+            type: ObjectId,
+            ref: 'user'
+        }
+    ],
+    followings: [
+        {
+            type: ObjectId,
+            ref: 'user'
+        }
+    ]
 });
 
 module.exports = {
@@ -34,6 +47,11 @@ module.exports = {
         database.getDataWithoutPopulate(model, data, (result) => {
             callback(result);
         })
+    },
+    findAndUpdate: (model, data, callback) => {
+        database.getIdAndUpdate(model, data, (result) => {
+            callback(result);
+        });
     }
 }
 

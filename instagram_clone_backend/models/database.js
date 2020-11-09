@@ -57,14 +57,29 @@ module.exports = {
         })
     },
     getIdAndUpdate: (model, data, callback) => {
-        model.findByIdAndUpdate(data.postId, 
+        model.findByIdAndUpdate(data.searchId, 
             data.action === "like" ? {$push: { likes: data.userIdWhoLiked } } :
             data.action === "dislike" ? {$pull: { likes: data.userIdWhoLiked } } : 
             data.action === "comment" ? {$push: { comments: data.comment } } :
+            data.action === "following" ? {$push: { followers: data.follower } } :
+            data.action === "follower" ? {$push: { followings: data.following } } :
+            data.action === "unFollowing" ? {$pull: { followers: data.follower } } :
+            data.action === "unFollower" ? {$pull: { followings: data.following } } :
             null,
         {
             new:true
         })
+        .exec((error, result) => {
+            if(error){
+                callback(error);
+            }
+            else{
+                callback(result);
+            }
+        })
+    },
+    getIdAndRemove: (model, data, callback) => {
+        model.findByIdAndRemove(data.searchId)
         .exec((error, result) => {
             if(error){
                 callback(error);

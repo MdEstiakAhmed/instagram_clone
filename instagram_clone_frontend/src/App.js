@@ -14,6 +14,10 @@ import Signup from './components/Signup/Signup';
 import Profile from './components/Profile/Profile';
 import CreatePost from './components/CreatePost/CreatePost';
 import {initialState, reducer} from './reducers/UserReducer';
+import UserProfile from './components/UserProfile/UserProfile';
+import SuggestedUser from './components/SuggestedUser/SuggestedUser';
+import FollowingUserList from './components/FollowingUserList/FollowingUserList';
+import FollowerUserList from './components/FollowerUserList/FollowerUserList';
 
 export const UserContext = createContext();
 
@@ -44,8 +48,20 @@ const Routing = () => {
       <Route exact path="/profile">
         <Profile/>
       </Route>
+      <Route exact path="/profile/:id">
+        <UserProfile/>
+      </Route>
       <Route exact path="/create">
         <CreatePost/>
+      </Route>
+      <Route exact path="/suggestion">
+        <SuggestedUser/>
+      </Route>
+      <Route exact path="/followingList">
+        <FollowingUserList/>
+      </Route>
+      <Route exact path="/followerList">
+        <FollowerUserList/>
       </Route>
     </Switch>
   )

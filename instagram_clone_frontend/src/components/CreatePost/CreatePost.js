@@ -61,6 +61,8 @@ const CreatePost = () => {
         .catch(error => {
             setLoading(false);
             setError(error);
+            history.push('/create');
+            console.log(error);
         })
     }
     return (

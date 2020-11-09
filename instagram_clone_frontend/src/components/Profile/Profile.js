@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext} from 'react';
 import './Profile.css';
 import { UserContext }  from '../../App';
+import { Link } from 'react-router-dom';
 
 const Profile = () => {
     const [userPost, setUserPost] = useState([]);
@@ -36,12 +37,17 @@ const Profile = () => {
                         <img src="https://www.kindpng.com/picc/m/495-4952535_create-digital-profile-icon-blue-user-profile-icon.png" className="img-thumbnail rounded-circle w-50" alt="Responsive image"/>
                     </div>
                     <div className="col-4 align-self-center">
-                        <h3>{state ? state.name : "loading..."}</h3>
-                        <div className="row">
-                            {userPost ? <div className="col-4"><b>{userPost.length}</b> posts</div> : <div className="col-4"><b>0</b> posts</div>}
-                            <div className="col-4"><b>33</b> follower</div>
-                            <div className="col-4"><b>33</b> following</div>
-                        </div>
+                        {
+                            userPost[0] ? 
+                            <>
+                                <h3>{state ? state.name : null}</h3>   
+                                <div className="row">
+                                    <div className="col-4"><b>{userPost.length}</b> posts</div>
+                                    <div className="col-4"><b>{userPost[0].postCreator.followers.length}</b> <Link to="/followerList" className="text-dark link bg-light p-1 rounded">follower</Link></div>
+                                    <div className="col-4"><b>{userPost[0].postCreator.followings.length}</b> <Link to="/followingList" className="text-dark link bg-light p-1 rounded">following</Link></div>
+                                </div>
+                            </> : "loading..."
+                        }
                     </div>
                 </div>
                 <div className="row mt-4 text-center">
