@@ -18,6 +18,7 @@ import UserProfile from './components/UserProfile/UserProfile';
 import SuggestedUser from './components/SuggestedUser/SuggestedUser';
 import FollowingUserList from './components/FollowingUserList/FollowingUserList';
 import FollowerUserList from './components/FollowerUserList/FollowerUserList';
+import EditProfile from './components/EditProfile/EditProfile';
 
 export const UserContext = createContext();
 
@@ -50,6 +51,9 @@ const Routing = () => {
       </Route>
       <Route exact path="/profile/:id">
         <UserProfile/>
+      </Route>
+      <Route exact path="/editProfile">
+        <EditProfile/>
       </Route>
       <Route exact path="/create">
         <CreatePost/>

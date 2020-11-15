@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { FaUserCircle } from "react-icons/fa";
 import { UserContext }  from '../../App';
+import { Link } from 'react-router-dom';
 
 const SuggestedUser = () => {
     const [userList, setUserList] = useState([]);
@@ -58,7 +59,7 @@ const SuggestedUser = () => {
                     return (
                         <div className="row justify-content-between m-1 border-bottom border-light" key={user._id}>
                             <div className="col-4">
-                                <h5><FaUserCircle className="icon mr-3" />{user.name}</h5>
+                                <h5><FaUserCircle className="icon mr-3" /><Link to={`/profile/${user._id}`} className="link text-dark">{user.name}</Link></h5>
                             </div>
                             <div className="col-4 text-right m-1">
                                 <button className="btn btn-primary btn-sm" onClick={() =>handleFollow(user._id)}>follow</button>
@@ -74,3 +75,5 @@ const SuggestedUser = () => {
 };
 
 export default SuggestedUser;
+
+

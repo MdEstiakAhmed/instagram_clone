@@ -14,7 +14,7 @@ router.get('/protected', loginRequire, (request, response) => {
 });
 
 router.post('/signup', (request, response) => {
-    const { name, email, password } = request.body;
+    const { name, email, password, photo } = request.body;
     if(name && email && password){
         findUser(user, request.body, (result) => {
             if(result){
@@ -26,7 +26,8 @@ router.post('/signup', (request, response) => {
                     const data = new user({
                         name: name,
                         email: email,
-                        password: hashedPassword
+                        password: hashedPassword,
+                        photo: photo
                     });
                     storeUser(data, (result) => {
                         if(result){

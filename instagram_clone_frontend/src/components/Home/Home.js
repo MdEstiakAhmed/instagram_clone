@@ -82,7 +82,7 @@ const Home = () => {
                             data.length > 0 ?
                             data.map(item => {
                                 return(
-                                    <div className="card  mt-4 mb-4 home_post" key={item._id}>
+                                    <div className="card  mt-4 mb-4 home_post w-75" key={item._id}>
                                         <div className="card-header">
                                             <div className="row justify-content-between">
                                                 <div className="col-4">
@@ -103,7 +103,7 @@ const Home = () => {
                                                 }
                                             </div>
                                         </div>
-                                        <img className="card-img-top" src={item.photo} alt="Card image cap" />
+                                        <img className="card-img-top" src={item.photo} alt="Card image cap"  />
                                         <div className="card-body">
                                             {
                                                 item.likes.includes(state._id) ?
@@ -146,7 +146,11 @@ const Home = () => {
                                     </div>
                                 );
                             }) :
-                            null
+                            <div className="card mt-5">
+                                <div className="card-body">
+                                    follow someone to see their posts. <Link to="/suggestion">suggestion</Link>
+                                </div>
+                            </div>
                         }
                         
                     </div>

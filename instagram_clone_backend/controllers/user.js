@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose  = require('mongoose');
 const loginRequire = require('../middleware/loginRequire');
 const { getUser, findAndUpdate } = require('../models/user');
+const bcrypt = require('bcryptjs');
 const { request, response } = require('express');
 const router = express.Router();
 const user = mongoose.model('user');
@@ -79,6 +80,55 @@ router.get('/getMyUser', loginRequire, (request, response) => {
     getUser(user, data, (results) => {
         if(results){
             return response.json(results);
+        }
+        else{
+            return response.status(422).json({'status': false, 'message': 'can not read user data'});
+        }
+    });
+});
+
+router.post('/passwordCheck', loginRequire, (request, response) => {
+    const { password } = request.body;
+    data = {
+        find: {
+            _id: request.user._id
+        }
+    }
+    getUser(user, data, (results) => {
+        if(results){
+            bcrypt.compare(password, results[0].password)
+            .then(status => {
+                if(status){
+                    return response.json({'status': true, 'message': "password match"});
+                }
+                else{
+                    return response.status(422).json({'status': false, 'message': 'password did not match'});
+                }
+            })
+            .catch(error => {
+                return response.json({'status': false, 'message': 'error in hashing'});
+            })
+        }
+        else{
+            return response.status(422).json({'status': false, 'message': 'can not read user data'});
+        }
+    });
+    
+});
+
+router.get('/getUser/:id', loginRequire, (request, response) => {
+    data = {
+        find: {
+            _id: request.params.id
+        },
+        makeFalse: {
+            email: 0,
+            password: 0
+        }
+    }
+    getUser(user, data, (results) => {
+        if(results){
+            return response.json({'status': true, 'data': results});
         }
         else{
             return response.status(422).json({'status': false, 'message': 'can not read user data'});

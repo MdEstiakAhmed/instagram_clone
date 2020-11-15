@@ -26,7 +26,11 @@ const userSchema = new mongoose.Schema({
             type: ObjectId,
             ref: 'user'
         }
-    ]
+    ],
+    photo: {
+        type: String,
+        default: 'https://res.cloudinary.com/mdestiakahmed/image/upload/v1605092094/unknown.png'
+    }
 });
 
 module.exports = {

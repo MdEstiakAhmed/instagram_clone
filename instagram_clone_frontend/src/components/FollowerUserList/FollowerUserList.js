@@ -53,7 +53,7 @@ const FollowerUserList = () => {
     return (
         <div className="container mt-5">
             <div className="card">
-                <div className="card-header"><h2>Suggestions</h2></div>
+                <div className="card-header"><h2>Followers</h2></div>
             </div>
             <div className="card-body">
                 {
@@ -62,7 +62,7 @@ const FollowerUserList = () => {
                     return (
                         <div className="row justify-content-between m-1 border-bottom border-light" key={user._id}>
                             <div className="col-4">
-                                <h5><FaUserCircle className="icon mr-3" />{user.name}</h5>
+                                <h5><FaUserCircle className="icon mr-3" /><Link to={`/profile/${user._id}`} className="link text-dark">{user.name}</Link></h5>
                             </div>
                             <div className="col-4 text-right m-1">
                                 {
@@ -74,7 +74,11 @@ const FollowerUserList = () => {
                         </div>
                     )
                 }) :
-                null
+                <div className="card mt-1">
+                    <div className="card-body">
+                        You have 0 followers. <Link to="/suggestion">follow other people.</Link>
+                    </div>
+                </div>
             }
             </div>
         </div>
