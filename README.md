@@ -1,4 +1,4 @@
-# instagram clone app
+# instagram clone app [project Live Link](https://instagram-cloned-app.herokuapp.com/)
 ## Back-end technology used:
 * ##### framework: express.js
 * ##### API authentication: JWT
@@ -6,4 +6,3 @@
 ## front-end technology used:
 * ##### library: react.js
 * ##### photo upload: https://cloudinary.com
-## [project Live Link](https://instagram-cloned-app.herokuapp.com/)
